@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+       xmlns:mvc="http://www.springframework.org/schema/mvc" 
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd  
+              http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd  
+              http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd              
+              http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+              http://www.springframework.org/schema/aop
+			http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
+
+    <!-- 激活@Controller模式 -->
+    <mvc:annotation-driven/>
+	<mvc:default-servlet-handler/>
+	<context:annotation-config />  
+	<aop:aspectj-autoproxy proxy-target-class="true" /> 
+    <!-- 对包中（包括子包）的所有类进行自动扫描，以完成bean创建及依赖注入的功能 -->
+    <context:component-scan base-package="com.*">
+        <!-- <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/> -->
+    </context:component-scan>
+	
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/jsp/"></property>
+        <property name="suffix" value=".jsp"></property>
+    </bean>
+  	
+   <!--  配置数据源dataSource  dbcp连接池方式连接数据源   -->
+   <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+      <property name="url" value="jdbc:mysql://localhost:3306/user?characterEncoding=UTF-8&amp;zeroDateTimeBehavior=convertToNull" />
+      <property name="driverClassName" value="com.mysql.jdbc.Driver" />
+      <property name="username" value="root" />
+      <property name="password" value="root" />
+      <!--配置初始化大小、最小、最大-->
+      <property name="initialSize" value="1"/>
+      <property name="minIdle" value="1"/>  
+      <property name="maxActive" value="30"/> 
+   </bean>
+    <bean id="jdbcTemplate"  
+        class="org.springframework.jdbc.core.JdbcTemplate">  
+        <property name="dataSource">  
+            <ref bean="dataSource" />  
+        </property>  
+    </bean>  
+</beans>
